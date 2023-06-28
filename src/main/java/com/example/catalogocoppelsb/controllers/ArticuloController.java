@@ -1,10 +1,17 @@
 package com.example.catalogocoppelsb.controllers;
 
+import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.DuplicateKeyException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -44,24 +51,31 @@ public class ArticuloController {
     }
 
     @PostMapping()
-    public ArticuloModel guardarArticulo(@RequestBody ArticuloDTO articuloData) {        
-        //Convertir datos DTO a modelo
-        ArticuloModel articulo = modelMapper.map(articuloData, ArticuloModel.class);
-        
-        //Guardar articulo
-        ArticuloModel articuloResponse = this.articuloService.guardarArticulo(articulo);
-        
-        return articuloResponse;
+    public ResponseEntity<?> guardarArticulo(@RequestBody ArticuloDTO articuloData) {        
+        try {
+            //Convertir datos DTO a modelo
+            ArticuloModel articulo = modelMapper.map(articuloData, ArticuloModel.class);
+            
+            //Guardar articulo
+            ArticuloModel articuloResponse = this.articuloService.guardarArticulo(articulo);
+            
+            return ResponseEntity.status(HttpStatus.CREATED).body(articuloResponse);
+            
+        } catch (DataIntegrityViolationException  e) {
+            return ResponseEntity.status(400).body("Codigo de articulo ya existe");
+        } catch (Exception  e) {
+            return ResponseEntity.status(500).body("Error al guardar articulo");
+        }
     }
 
     @DeleteMapping( path = "/{id}")
-    public String eliminarporId(@PathVariable("id") Long id) {
+    public ResponseEntity<?> eliminarporId(@PathVariable("id") Long id) {
         boolean ok = this.articuloService.eliminarArticulo(id);
 
         if (ok) {
-            return "Se eliminó el articulo "+id;
+            return ResponseEntity.status(HttpStatus.OK).body("Se eliminó el articulo "+id);
         } else {
-            return "No se encontro el articulo "+id;
+            return ResponseEntity.status(400).body("No se encontro el articulo "+id);
         }
     }
 }

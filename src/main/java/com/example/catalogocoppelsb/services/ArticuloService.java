@@ -34,7 +34,6 @@ public class ArticuloService {
         
         //guardar caracteristicas
         Long newId = newArticulo.getId();
-        System.out.println("Id: "+newId);
         for (CaracteristicaModel item : caracteristicas) {
             item.setArticuloId(newId);
             item.setStatus(1);
