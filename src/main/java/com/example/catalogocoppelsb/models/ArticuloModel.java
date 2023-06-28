@@ -1,6 +1,8 @@
 package com.example.catalogocoppelsb.models;
 
 import java.sql.Timestamp;
+import java.util.List;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -13,15 +15,47 @@ public class ArticuloModel {
     
     @Column(unique = true, nullable = false)
     private String codigo;
+
+    @Column(name = "nombre")
     private String nombre;
 
     @Column(name = "cat_id")
     private Long cat;
 
+    @Column(name = "status")
     private Integer status;
     private Timestamp created_at;
     private Timestamp updated_at;
 
+    @OneToMany(mappedBy="articulo")
+    private List<CaracteristicaModel> caracteristicas;
+
+    // @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    // @JoinColumn(name = "articulo_id", insertable=false, updatable=false)
+    // private List<CaracteristicaModel> caracteristicas;
+
+    @OneToOne(optional=false, cascade = CascadeType.ALL)
+    @JoinColumn(name = "cat_id", referencedColumnName = "id", insertable=false, updatable=false)
+    private CategoriaModel categoria;
+
+    public Long getCat() {
+        return cat;
+    }
+    public void setCat(Long cat) {
+        this.cat = cat;
+    }
+    public List<CaracteristicaModel> getCaracteristicas() {
+        return caracteristicas;
+    }
+    public void setCaracteristicas(List<CaracteristicaModel> caracteristicas) {
+        this.caracteristicas = caracteristicas;
+    }
+    public CategoriaModel getCategoria() {
+        return categoria;
+    }
+    public void setCategoria(CategoriaModel categoria) {
+        this.categoria = categoria;
+    }
     public Long getId() {
         return id;
     }
@@ -40,12 +74,7 @@ public class ArticuloModel {
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
-    public Long getCat() {
-        return cat;
-    }
-    public void setCat(Long cat) {
-        this.cat = cat;
-    }
+
     public Integer getStatus() {
         return status;
     }
@@ -65,5 +94,4 @@ public class ArticuloModel {
         this.updated_at = updated_at;
     }
     
-
 }

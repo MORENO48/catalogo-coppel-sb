@@ -17,6 +17,9 @@ public class CatArticuloModel {
     private Timestamp created_at;
     private Timestamp updated_at;
 
+    @OneToOne(mappedBy = "categoria")
+    private ArticuloModel articulo;
+    
     public Long getId() {
         return id;
     }

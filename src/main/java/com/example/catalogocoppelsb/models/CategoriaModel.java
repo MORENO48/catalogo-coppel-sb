@@ -4,30 +4,20 @@ import java.sql.Timestamp;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name="caracteristicas")
-public class CaracteristicaModel {
+@Table(name="cat_articulos")
+public class CategoriaModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(unique = true, nullable = false)
     private Long id;
 
-    @Column(name = "articulo_id")
-    private Long articuloId;
-
     @Column(name = "nombre")
     private String nombre;
-
-    @Column(name = "valor")
-    private String Valor;
 
     @Column(name = "status")
     private Integer status;
     private Timestamp created_at;//timestamp
     private Timestamp updated_at; //timestamp
-
-    @ManyToOne
-    @JoinColumn(name = "articulo_id", insertable=false, updatable=false)
-    private ArticuloModel articulo;
 
     public Long getId() {
         return id;
@@ -35,23 +25,11 @@ public class CaracteristicaModel {
     public void setId(Long id) {
         this.id = id;
     }
-    public Long getArticuloId() {
-        return articuloId;
-    }
-    public void setArticuloId(Long articulo_id) {
-        this.articuloId = articulo_id;
-    }
     public String getNombre() {
         return nombre;
     }
     public void setNombre(String nombre) {
         this.nombre = nombre;
-    }
-    public String getValor() {
-        return Valor;
-    }
-    public void setValor(String valor) {
-        Valor = valor;
     }
     public Integer getStatus() {
         return status;

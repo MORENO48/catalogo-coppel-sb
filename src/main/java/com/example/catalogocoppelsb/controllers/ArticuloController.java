@@ -3,6 +3,7 @@ package com.example.catalogocoppelsb.controllers;
 import java.util.ArrayList;
 import java.util.Optional;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,34 +14,47 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.catalogocoppelsb.models.ArticuloDTO;
 import com.example.catalogocoppelsb.models.ArticuloModel;
 import com.example.catalogocoppelsb.services.ArticuloService;
 
 @RestController
-@RequestMapping("/articulo")
+@RequestMapping("/api/articulo")
 public class ArticuloController {
     @Autowired
+	private ModelMapper modelMapper;
+
+    @Autowired
     ArticuloService articuloService;
-
-    @GetMapping()
-    public ArrayList<ArticuloModel> obtenerArticulos() {
-        return articuloService.obtenerArticulos();
-    }
-
-    @PostMapping()
-    public ArticuloModel guardarArticulo(@RequestBody ArticuloModel articulo) {
-        System.out.println(articulo.getCodigo());
-        return this.articuloService.guardarArticulo(articulo);
-    }
 
     @GetMapping( path = "/{id}")
     public Optional<ArticuloModel> obtenerArticuloPorId(@PathVariable("id") Long id) {
         return this.articuloService.obtenerById(id);
     }
 
-    @GetMapping("query")
+    @GetMapping()
+    public ArrayList<ArticuloModel> obtenerArticulos() {
+        return articuloService.obtenerArticulos();
+    }
+
+    @GetMapping("busqueda")
     public ArrayList<ArticuloModel> obtenerArticuloPorBusqueda(@RequestParam("codigo") String codigo, @RequestParam("nombre") String nombre, @RequestParam("categoria_id") Long categoria_id) {
         return this.articuloService.obtenerArticuloPorBusqueda(codigo,nombre,categoria_id);
+    }
+
+    @PostMapping()
+    public ArticuloModel guardarArticulo(@RequestBody ArticuloDTO articuloData) {
+        System.out.println("---Paso 1");
+        System.out.println(articuloData.getCaracteristicas());
+        
+        //Convertir datos DTO a modelo
+        ArticuloModel articulo = modelMapper.map(articuloData, ArticuloModel.class);
+        
+        // System.out.println("---Paso 2");
+        ArticuloModel articuloResponse = this.articuloService.guardarArticulo(articulo);
+        
+        System.out.println("---Paso 3");
+        return articuloResponse;
     }
 
     @DeleteMapping( path = "/{id}")
