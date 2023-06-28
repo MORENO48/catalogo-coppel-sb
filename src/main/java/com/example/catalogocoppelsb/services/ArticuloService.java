@@ -61,6 +61,10 @@ public class ArticuloService {
                 return false;
             }
             ArticuloModel articulo = existe.get();
+            if (articulo.getStatus() == 0) {
+                return false;
+            }
+            
             articulo.setStatus(0);
             articuloRepository.save(articulo);
 

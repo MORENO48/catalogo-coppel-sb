@@ -43,17 +43,13 @@ public class ArticuloController {
     }
 
     @PostMapping()
-    public ArticuloModel guardarArticulo(@RequestBody ArticuloDTO articuloData) {
-        System.out.println("---Paso 1");
-        System.out.println(articuloData.getCaracteristicas());
-        
+    public ArticuloModel guardarArticulo(@RequestBody ArticuloDTO articuloData) {        
         //Convertir datos DTO a modelo
         ArticuloModel articulo = modelMapper.map(articuloData, ArticuloModel.class);
         
-        // System.out.println("---Paso 2");
+        //Guardar articulo
         ArticuloModel articuloResponse = this.articuloService.guardarArticulo(articulo);
         
-        System.out.println("---Paso 3");
         return articuloResponse;
     }
 
@@ -64,7 +60,7 @@ public class ArticuloController {
         if (ok) {
             return "Se eliminó el articulo "+id;
         } else {
-            return "No se pudo eliminar el articulo "+id;
+            return "No se encontro el articulo "+id;
         }
     }
 }
