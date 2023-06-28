@@ -51,7 +51,43 @@ public class ArticuloService {
 
     public ArrayList<ArticuloModel> obtenerArticuloPorBusqueda (String codigo, String nombre, Long categoria_id) {
         Integer status = 1;
-        return articuloRepository.findByCodigoAndNombreContainingAndCatAndStatus(codigo,nombre,categoria_id,status);
+
+        if (codigo == "" || nombre == "" || categoria_id == null) {
+
+            if (codigo != "") {
+                if (nombre != null) {
+                    //Busqueda por codigo y nombre
+                    return articuloRepository.findByCodigoAndNombreContainingAndStatus(codigo,nombre,status);
+                } else if (categoria_id != null) {
+                    //Busqueda por codigo y categoria
+                    return articuloRepository.findByCodigoAndCatAndStatus(codigo, categoria_id,status);
+                } else {
+                    //Busqueda por codigo
+                    return articuloRepository.findByCodigoAndStatus(codigo, status);
+                }
+            }
+     
+            if (nombre != "") {
+                if (categoria_id != null) {
+                    //Busqueda por nombre y categoria
+                    return articuloRepository.findByNombreContainingAndCatAndStatus(nombre, categoria_id, status);
+                } else {
+                    //Busqueda por nombre
+                    return articuloRepository.findByNombreContainingAndStatus(nombre, status);
+                }
+            }
+
+            if (categoria_id != null) {
+                //Busqueda por categoria
+                return articuloRepository.findByCatAndStatus(categoria_id, status);
+            } 
+            
+            //busqueda sin parametros
+            return articuloRepository.findByStatus(status);
+        } else  {
+            //Busqueda completa
+            return articuloRepository.findByCodigoAndNombreContainingAndCatAndStatus(codigo,nombre,categoria_id,status);
+        }
     }
 
     public boolean eliminarArticulo(Long id) {

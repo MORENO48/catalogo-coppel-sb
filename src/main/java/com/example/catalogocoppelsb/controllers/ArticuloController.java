@@ -38,7 +38,8 @@ public class ArticuloController {
     }
 
     @GetMapping("busqueda")
-    public ArrayList<ArticuloModel> obtenerArticuloPorBusqueda(@RequestParam("codigo") String codigo, @RequestParam("nombre") String nombre, @RequestParam("categoria_id") Long categoria_id) {
+    public ArrayList<ArticuloModel> obtenerArticuloPorBusqueda(@RequestParam(value="codigo", required = false) String codigo, @RequestParam(value = "nombre", required = false) String nombre, @RequestParam(value = "categoria_id", required = false) Long categoria_id) {
+        System.out.println("paso 1");
         return this.articuloService.obtenerArticuloPorBusqueda(codigo,nombre,categoria_id);
     }
 
