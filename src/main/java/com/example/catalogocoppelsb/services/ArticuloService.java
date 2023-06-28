@@ -21,7 +21,8 @@ public class ArticuloService {
     CaracteristicaRepository caracteristicaRepository;
 
     public ArrayList<ArticuloModel> obtenerArticulos () {
-        return (ArrayList<ArticuloModel>)articuloRepository.findAll();
+        Integer status = 1;
+        return (ArrayList<ArticuloModel>)articuloRepository.findByStatus(status);
     }
 
     public ArticuloModel guardarArticulo(ArticuloModel articulo) {
@@ -55,7 +56,14 @@ public class ArticuloService {
 
     public boolean eliminarArticulo(Long id) {
         try {
-            articuloRepository.deleteById(id);
+            Optional<ArticuloModel> existe = articuloRepository.findById(id);
+            if (!existe.isPresent()) {
+                return false;
+            }
+            ArticuloModel articulo = existe.get();
+            articulo.setStatus(0);
+            articuloRepository.save(articulo);
+
             return true;
         } catch (Exception e) {
             return false;
