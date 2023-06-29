@@ -75,9 +75,6 @@ public class ArticuloController {
     @PostMapping("caracteristica")
     public ResponseEntity<?> guardarCaracteristica(@RequestBody CaracteristicaDTO caracteristicaData) {
         try {
-            System.out.println("articulo_id =>"+caracteristicaData.getArticuloid());
-            System.out.println("nombre =>"+caracteristicaData.getNombre());
-            System.out.println("valor =>"+caracteristicaData.getValor());
             //Convertir datos DTO a modelo
             CaracteristicaModel carac = modelMapper.map(caracteristicaData, CaracteristicaModel.class);
 

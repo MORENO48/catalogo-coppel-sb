@@ -17,10 +17,6 @@ public class CaracteristicaService {
     }
 
     public CaracteristicaModel guardarCaracteristica (CaracteristicaModel carac) {
-        System.out.println("articulo_id ->"+carac.getArticuloId());
-        System.out.println("nombre ->"+carac.getNombre());
-        System.out.println("valor ->"+carac.getValor());
-
         Integer status = 1;
         carac.setStatus(status);
         return caracteristicaRepository.save(carac);
