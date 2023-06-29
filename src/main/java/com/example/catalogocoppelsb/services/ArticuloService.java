@@ -30,6 +30,18 @@ public class ArticuloService {
         articulo.setStatus(1);
 
         List<CaracteristicaModel> caracteristicas = articulo.getCaracteristicas();
+        Long id = articulo.getId();
+        if (id != null) {
+            //Actualizar articulo
+            Optional<ArticuloModel> existe = articuloRepository.findById(id);
+            ArticuloModel actualizarArticulo = existe.get();
+
+            actualizarArticulo.setNombre(articulo.getNombre());
+            actualizarArticulo.setCat(articulo.getCat());
+
+            return articuloRepository.save(actualizarArticulo);
+        }
+        
         ArticuloModel newArticulo = articuloRepository.save(articulo);
         
         //guardar caracteristicas
@@ -51,10 +63,10 @@ public class ArticuloService {
     public ArrayList<ArticuloModel> obtenerArticuloPorBusqueda (String codigo, String nombre, Long categoria_id) {
         Integer status = 1;
 
-        if (codigo == "" || nombre == "" || categoria_id == null) {
+        if (codigo == "" || codigo == null || nombre == "" || nombre == null || categoria_id == null) {
 
-            if (codigo != "") {
-                if (nombre != null) {
+            if (codigo != "" && codigo != null) {
+                if (nombre != "" && nombre != null) {
                     //Busqueda por codigo y nombre
                     return articuloRepository.findByCodigoAndNombreContainingAndStatus(codigo,nombre,status);
                 } else if (categoria_id != null) {
@@ -66,7 +78,7 @@ public class ArticuloService {
                 }
             }
      
-            if (nombre != "") {
+            if (nombre != "" && nombre != null) {
                 if (categoria_id != null) {
                     //Busqueda por nombre y categoria
                     return articuloRepository.findByNombreContainingAndCatAndStatus(nombre, categoria_id, status);
@@ -103,6 +115,15 @@ public class ArticuloService {
             articulo.setStatus(0);
             articuloRepository.save(articulo);
 
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+    
+    public boolean eliminarCaracteristica(Long id) {
+        try {
+            caracteristicaRepository.deleteById(id);
             return true;
         } catch (Exception e) {
             return false;

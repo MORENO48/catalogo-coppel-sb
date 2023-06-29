@@ -12,7 +12,7 @@ public class CaracteristicaModel {
     private Long id;
 
     @Column(name = "articulo_id")
-    private Long articuloId;
+    private Long articuloid;
 
     @Column(name = "nombre")
     private String nombre;
@@ -36,10 +36,10 @@ public class CaracteristicaModel {
         this.id = id;
     }
     public Long getArticuloId() {
-        return articuloId;
+        return articuloid;
     }
     public void setArticuloId(Long articulo_id) {
-        this.articuloId = articulo_id;
+        this.articuloid = articulo_id;
     }
     public String getNombre() {
         return nombre;

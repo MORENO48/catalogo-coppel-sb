@@ -20,7 +20,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.catalogocoppelsb.models.ArticuloDTO;
 import com.example.catalogocoppelsb.models.ArticuloModel;
+import com.example.catalogocoppelsb.models.CaracteristicaDTO;
+import com.example.catalogocoppelsb.models.CaracteristicaModel;
 import com.example.catalogocoppelsb.services.ArticuloService;
+import com.example.catalogocoppelsb.services.CaracteristicaService;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:8080/",allowedHeaders = "*")
@@ -31,6 +34,9 @@ public class ArticuloController {
 
     @Autowired
     ArticuloService articuloService;
+
+    @Autowired
+    CaracteristicaService caracteristicaService;
 
     @GetMapping( path = "/{id}")
     public Optional<ArticuloModel> obtenerArticuloPorId(@PathVariable("id") Long id) {
@@ -43,7 +49,7 @@ public class ArticuloController {
     }
 
     @GetMapping("busqueda")
-    public ArrayList<ArticuloModel> obtenerArticuloPorBusqueda(@RequestParam(value="codigo", required = false) String codigo, @RequestParam(value = "nombre", required = false) String nombre, @RequestParam(value = "categoria_id", required = false) Long categoria_id) {
+    public ArrayList<ArticuloModel> obtenerArticuloPorBusqueda(@RequestParam(value="codigo", required = false) String codigo, @RequestParam(value = "nombre", required = false) String nombre, @RequestParam(value = "cat", required = false) Long categoria_id) {
         System.out.println("paso 1");
         return this.articuloService.obtenerArticuloPorBusqueda(codigo,nombre,categoria_id);
     }
@@ -57,7 +63,7 @@ public class ArticuloController {
             //Guardar articulo
             ArticuloModel articuloResponse = this.articuloService.guardarArticulo(articulo);
             
-            return ResponseEntity.status(HttpStatus.CREATED).body(articuloResponse);
+            return ResponseEntity.status(HttpStatus.OK).body(articuloResponse);
             
         } catch (DataIntegrityViolationException  e) {
             return ResponseEntity.status(400).body("Codigo de articulo ya existe");
@@ -66,9 +72,38 @@ public class ArticuloController {
         }
     }
 
+    @PostMapping("caracteristica")
+    public ResponseEntity<?> guardarCaracteristica(@RequestBody CaracteristicaDTO caracteristicaData) {
+        try {
+            System.out.println("articulo_id =>"+caracteristicaData.getArticuloid());
+            System.out.println("nombre =>"+caracteristicaData.getNombre());
+            System.out.println("valor =>"+caracteristicaData.getValor());
+            //Convertir datos DTO a modelo
+            CaracteristicaModel carac = modelMapper.map(caracteristicaData, CaracteristicaModel.class);
+
+            //Guardar caracteristica
+            CaracteristicaModel caracResponse = this.caracteristicaService.guardarCaracteristica(carac);
+
+            return ResponseEntity.status(HttpStatus.OK).body(caracResponse);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error al guardar caracteristica");
+        }
+    }
+
     @DeleteMapping( path = "/{id}")
     public ResponseEntity<?> eliminarporId(@PathVariable("id") Long id) {
         boolean ok = this.articuloService.eliminarArticulo(id);
+
+        if (ok) {
+            return ResponseEntity.status(HttpStatus.OK).body("Se eliminó el articulo "+id);
+        } else {
+            return ResponseEntity.status(400).body("No se encontro el articulo "+id);
+        }
+    }
+
+    @DeleteMapping( path = "/caracteristica/{id}")
+    public ResponseEntity<?> eliminarporCaractId(@PathVariable("id") Long id) {
+        boolean ok = this.articuloService.eliminarCaracteristica(id);
 
         if (ok) {
             return ResponseEntity.status(HttpStatus.OK).body("Se eliminó el articulo "+id);
