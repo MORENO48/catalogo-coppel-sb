@@ -1,17 +1,14 @@
 package com.example.catalogocoppelsb.controllers;
 
-import java.sql.SQLException;
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,6 +23,7 @@ import com.example.catalogocoppelsb.models.ArticuloModel;
 import com.example.catalogocoppelsb.services.ArticuloService;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:8080/",allowedHeaders = "*")
 @RequestMapping("/api/articulo")
 public class ArticuloController {
     @Autowired
